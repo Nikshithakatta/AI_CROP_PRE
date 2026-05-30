@@ -1,0 +1,390 @@
+.cost-benefit-page {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.cost-benefit-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.cost-benefit-header h2 {
+  font-size: 2.5rem;
+  color: white;
+  margin-bottom: 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 16px;
+  background: rgba(34, 197, 94, 0.16);
+}
+
+.cost-benefit-header p {
+  color: rgba(229, 231, 235, 0.8);
+  font-size: 1.1rem;
+}
+
+.cost-benefit-controls {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.analysis-section {
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: var(--transition-normal);
+}
+
+.analysis-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+}
+
+.analysis-section h3 {
+  color: #f8fafc;
+  margin-bottom: 1.5rem;
+  font-size: 1.3rem;
+}
+
+.input-group {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.crop-select {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #f8fafc;
+  font-size: 1rem;
+  transition: var(--transition-normal);
+}
+
+.crop-select option {
+  background: rgba(0, 0, 0, 0.9);
+  color: #f8fafc;
+  padding: 8px;
+}
+
+.crop-select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.analyze-btn, .compare-btn {
+  padding: 0.75rem 2rem;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-normal);
+  box-shadow: var(--shadow-md);
+}
+
+.analyze-btn:hover:not(:disabled), .compare-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.analyze-btn:disabled, .compare-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.error-message {
+  background: var(--color-error-bg);
+  color: var(--color-error);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-error-border);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-weight: 500;
+}
+
+.analysis-results {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  animation: slideIn 0.6s ease-out;
+}
+
+.result-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.result-header h3 {
+  color: #f8fafc;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.rating-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.metric-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition-normal);
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.18);
+}
+
+.metric-card h4 {
+  color: rgba(229, 231, 235, 0.72);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f8fafc;
+}
+
+.metric-value.cost { color: var(--color-error); }
+.metric-value.revenue { color: var(--color-success); }
+.metric-value.profit.positive { color: var(--color-success); }
+.metric-value.profit.negative { color: var(--color-error); }
+.metric-value.roi.positive { color: var(--color-success); }
+.metric-value.roi.negative { color: var(--color-error); }
+
+.cost-breakdown {
+  margin-bottom: 2rem;
+}
+
+.cost-breakdown h4 {
+  color: #f8fafc;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.breakdown-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.breakdown-chart {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+}
+
+.breakdown-list {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.breakdown-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: var(--transition-fast);
+}
+
+.breakdown-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.breakdown-item:last-child {
+  margin-bottom: 0;
+}
+
+.category-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.color-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.category {
+  font-weight: 600;
+  color: #f8fafc;
+}
+
+.percentage {
+  color: rgba(229, 231, 235, 0.72);
+  font-size: 0.9rem;
+}
+
+.insights-section {
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.insights-section h4 {
+  color: #f8fafc;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.insights-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.insights-list li {
+  color: rgba(229, 231, 235, 0.82);
+  margin-bottom: 0.5rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.insights-list li:before {
+  content: "💡";
+  position: absolute;
+  left: 0;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .cost-benefit-page {
+    padding: 1rem;
+  }
+
+  .cost-benefit-header h2 {
+    font-size: 2rem;
+  }
+
+  .cost-benefit-controls {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .input-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .analyze-btn {
+    width: 100%;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .breakdown-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .table-header, .table-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .table-header span, .table-row span {
+    padding: 0.25rem 0;
+  }
+
+  .breakdown-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .category-info {
+    width: 100%;
+  }
+
+  .amount, .percentage {
+    text-align: left;
+    margin: 0;
+  }
+}

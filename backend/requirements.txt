@@ -1,0 +1,10 @@
+streamlit
+requests
+pandas
+numpy
+scikit-learn
+geopy
+python-dotenv
+fastapi
+uvicorn[standard]
+pydantic

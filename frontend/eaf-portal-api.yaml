@@ -1,0 +1,847 @@
+aopenapi: 3.0.3
+info:
+  title: Enterprise Agentic Framework (EAF) Portal API
+  description: |
+    REST API for EAF Portal - A comprehensive solution for enterprise AI transformation strategy management.
+    This API provides all necessary endpoints to power the EAF Portal frontend.
+  version: 1.0.0
+  contact:
+    name: EAF Support
+    email: support@eafportal.com
+  license:
+    name: Proprietary
+    url: https://eafportal.com/license
+
+servers:
+  - url: https://api.eafportal.com/v1
+    description: Production API
+  - url: https://staging-api.eafportal.com/v1
+    description: Staging API
+  - url: http://localhost:3001/api/v1
+    description: Local development
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        details:
+          type: string
+          nullable: true
+    
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum: [admin, user, viewer]
+        avatarUrl:
+          type: string
+          format: uri
+          nullable: true
+    
+    DashboardMetrics:
+      type: object
+      properties:
+        totalValueRealized:
+          type: number
+          format: double
+        activeInitiatives:
+          type: integer
+        pendingApprovals:
+          type: integer
+        riskAlerts:
+          type: integer
+        recentActivities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Activity'
+    
+    Activity:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [update, create, delete, approval, comment]
+        entityType:
+          type: string
+        entityId:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
+    
+    AINorthStar:
+      type: object
+      properties:
+        visionStatement:
+          type: string
+        strategicObjectives:
+          type: array
+          items:
+            type: string
+        keyResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/KeyResult'
+        lastUpdated:
+          type: string
+          format: date-time
+    
+    KeyResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        targetValue:
+          type: number
+        currentValue:
+          type: number
+        unit:
+          type: string
+        dueDate:
+          type: string
+          format: date
+    
+    UseCase:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        businessValue:
+          type: integer
+          minimum: 1
+          maximum: 5
+        technicalFeasibility:
+          type: integer
+          minimum: 1
+          maximum: 5
+        status:
+          type: string
+          enum: [proposed, in_progress, completed, on_hold, cancelled]
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+    
+    Comment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        content:
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+security:
+  - BearerAuth: []
+
+paths:
+  # Dashboard Endpoints
+  /dashboard/metrics:
+    get:
+      summary: Get dashboard metrics and recent activities
+      tags: [Dashboard]
+      responses:
+        '200':
+          description: Successfully retrieved dashboard metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardMetrics'
+  
+  # AI Strategy Canvas Endpoints
+  /ai-strategy/north-star:
+    get:
+      summary: Get AI North Star strategy
+      tags: [AI Strategy]
+      responses:
+        '200':
+          description: Successfully retrieved AI North Star strategy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AINorthStar'
+    
+    put:
+      summary: Update AI North Star strategy
+      tags: [AI Strategy]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AINorthStar'
+      responses:
+        '200':
+          description: Successfully updated AI North Star strategy
+  
+  /ai-strategy/use-cases:
+    get:
+      summary: Get all use cases
+      tags: [AI Strategy]
+      responses:
+        '200':
+          description: Successfully retrieved use cases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UseCase'
+    
+    post:
+      summary: Create a new use case
+      tags: [AI Strategy]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, description]
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                businessValue:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                technicalFeasibility:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+      responses:
+        '201':
+          description: Successfully created use case
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UseCase'
+  
+  /ai-strategy/use-cases/{useCaseId}:
+    parameters:
+      - name: useCaseId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+    
+    get:
+      summary: Get use case by ID
+      tags: [AI Strategy]
+      responses:
+        '200':
+          description: Successfully retrieved use case
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UseCase'
+    
+    put:
+      summary: Update use case
+      tags: [AI Strategy]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UseCase'
+      responses:
+        '200':
+          description: Successfully updated use case
+    
+    delete:
+      summary: Delete use case
+      tags: [AI Strategy]
+      responses:
+        '204':
+          description: Successfully deleted use case
+  
+  # Maturity Assessment Endpoints
+  /maturity/assessments:
+    get:
+      summary: Get all maturity assessments
+      tags: [Maturity Assessment]
+      responses:
+        '200':
+          description: Successfully retrieved assessments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Assessment'
+    
+    post:
+      summary: Create a new assessment
+      tags: [Maturity Assessment]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssessmentInput'
+      responses:
+        '201':
+          description: Successfully created assessment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assessment'
+  
+  # Org & Operating Model Endpoints
+  /organization/model:
+    get:
+      summary: Get organization model
+      tags: [Organization]
+      responses:
+        '200':
+          description: Successfully retrieved organization model
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrgModel'
+    
+    put:
+      summary: Update organization model
+      tags: [Organization]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgModelInput'
+      responses:
+        '200':
+          description: Successfully updated organization model
+  
+  # Data & Platform Strategy Endpoints
+  /data-platform/architecture:
+    get:
+      summary: Get data platform architecture
+      tags: [Data Platform]
+      responses:
+        '200':
+          description: Successfully retrieved data platform architecture
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataPlatformArchitecture'
+  
+  # AgentOps Governance Endpoints
+  /governance/policies:
+    get:
+      summary: Get all governance policies
+      tags: [Governance]
+      responses:
+        '200':
+          description: Successfully retrieved policies
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GovernancePolicy'
+  
+  # Monetization Strategy Endpoints
+  /monetization/business-cases:
+    get:
+      summary: Get all business cases
+      tags: [Monetization]
+      responses:
+        '200':
+          description: Successfully retrieved business cases
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BusinessCase'
+  
+  # Authentication Endpoints
+  /auth/login:
+    post:
+      summary: User login
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                  user:
+                    $ref: '#/components/schemas/User'
+  
+  /auth/me:
+    get:
+      summary: Get current user profile
+      tags: [Authentication]
+      responses:
+        '200':
+          description: Successfully retrieved user profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+# Add more schemas for other models
+components:
+  schemas:
+    Assessment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, in_progress, completed, archived]
+        assessmentDate:
+          type: string
+          format: date
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssessmentScore'
+        recommendations:
+          type: array
+          items:
+            type: string
+        createdBy:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    AssessmentInput:
+      type: object
+      required: [name, description]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, in_progress, completed, archived]
+          default: draft
+        assessmentDate:
+          type: string
+          format: date
+        scores:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssessmentScoreInput'
+    
+    AssessmentScore:
+      type: object
+      properties:
+        dimension:
+          type: string
+        score:
+          type: number
+          minimum: 0
+          maximum: 5
+        industryBenchmark:
+          type: number
+          minimum: 0
+          maximum: 5
+    
+    AssessmentScoreInput:
+      type: object
+      required: [dimension, score]
+      properties:
+        dimension:
+          type: string
+        score:
+          type: number
+          minimum: 0
+          maximum: 5
+    
+    OrgModel:
+      type: object
+      properties:
+        coeModel:
+          type: string
+          enum: [centralized, decentralized, hub_and_spoke, federated, center_of_competence]
+        raciMatrix:
+          type: array
+          items:
+            $ref: '#/components/schemas/RACIMatrixItem'
+        kpis:
+          type: array
+          items:
+            $ref: '#/components/schemas/KPI'
+    
+    OrgModelInput:
+      type: object
+      properties:
+        coeModel:
+          type: string
+          enum: [centralized, decentralized, hub_and_spoke, federated, center_of_competence]
+        raciMatrix:
+          type: array
+          items:
+            $ref: '#/components/schemas/RACIMatrixItemInput'
+        kpis:
+          type: array
+          items:
+            $ref: '#/components/schemas/KPIInput'
+    
+    RACIMatrixItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        activity:
+          type: string
+        responsible:
+          type: string
+        accountable:
+          type: string
+        consulted:
+          type: array
+          items:
+            type: string
+        informed:
+          type: array
+          items:
+            type: string
+    
+    RACIMatrixItemInput:
+      type: object
+      required: [activity, responsible, accountable]
+      properties:
+        activity:
+          type: string
+        responsible:
+          type: string
+        accountable:
+          type: string
+        consulted:
+          type: array
+          items:
+            type: string
+          default: []
+        informed:
+          type: array
+          items:
+            type: string
+          default: []
+    
+    KPI:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        targetValue:
+          type: number
+        currentValue:
+          type: number
+        unit:
+          type: string
+        frequency:
+          type: string
+          enum: [daily, weekly, monthly, quarterly, annually]
+    
+    KPIInput:
+      type: object
+      required: [name, targetValue, unit, frequency]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        targetValue:
+          type: number
+        unit:
+          type: string
+        frequency:
+          type: string
+          enum: [daily, weekly, monthly, quarterly, annually]
+    
+    DataPlatformArchitecture:
+      type: object
+      properties:
+        model:
+          type: string
+          enum: [centralized, distributed, data_mesh, data_fabric, data_lakehouse]
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformComponent'
+        modelRegistry:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+            type:
+              type: string
+              enum: [mlflow, sagemaker, custom]
+        vectorDB:
+          type: object
+          properties:
+            type:
+              type: string
+              enum: [pinecone, weaviate, milvus, qdrant, redis, elasticsearch, custom]
+            configuration:
+              type: object
+              additionalProperties: true
+        buildVsBuyAnalysis:
+          type: object
+          properties:
+            decision:
+              type: string
+              enum: [build, buy, hybrid]
+            rationale:
+              type: string
+            costComparison:
+              type: object
+              additionalProperties: true
+    
+    PlatformComponent:
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+          enum: [ingestion, storage, processing, serving, monitoring, governance]
+        technology:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [planned, in_progress, live, deprecated]
+    
+    GovernancePolicy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+          enum: [security, privacy, compliance, operational, ethical]
+        status:
+          type: string
+          enum: [draft, active, deprecated, archived]
+        lastReviewed:
+          type: string
+          format: date
+        owner:
+          $ref: '#/components/schemas/User'
+        content:
+          type: string
+        approvalWorkflow:
+          $ref: '#/components/schemas/ApprovalWorkflow'
+    
+    ApprovalWorkflow:
+      type: object
+      properties:
+        steps:
+          type: array
+          items:
+            $ref: '#/components/schemas/ApprovalStep'
+        currentStep:
+          type: integer
+        status:
+          type: string
+          enum: [not_started, in_progress, approved, rejected, cancelled]
+    
+    ApprovalStep:
+      type: object
+      properties:
+        name:
+          type: string
+        approvers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        status:
+          type: string
+          enum: [pending, approved, rejected, skipped]
+        comments:
+          type: string
+        completedAt:
+          type: string
+          format: date-time
+          nullable: true
+    
+    BusinessCase:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [draft, submitted, approved, rejected, in_progress, completed, cancelled]
+        financials:
+          $ref: '#/components/schemas/Financials'
+        roiAnalysis:
+          $ref: '#/components/schemas/ROIAnalysis'
+        valueRealization:
+          type: array
+          items:
+            $ref: '#/components/schemas/ValueRealization'
+        createdBy:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    Financials:
+      type: object
+      properties:
+        initialInvestment:
+          type: number
+          format: double
+        ongoingCosts:
+          type: number
+          format: double
+        costSavings:
+          type: number
+          format: double
+        revenueImpact:
+          type: number
+          format: double
+        timeToValue:
+          type: integer
+          description: Time to value in months
+    
+    ROIAnalysis:
+      type: object
+      properties:
+        paybackPeriod:
+          type: number
+          format: double
+          description: Payback period in months
+        roiPercentage:
+          type: number
+          format: double
+        npv:
+          type: number
+          format: double
+          description: Net Present Value
+        irr:
+          type: number
+          format: double
+          description: Internal Rate of Return
+        breakEvenPoint:
+          type: string
+          format: date
+    
+    ValueRealization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        metric:
+          type: string
+        targetValue:
+          type: number
+        currentValue:
+          type: number
+        unit:
+          type: string
+        achievedAt:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          type: string
+          enum: [on_track, at_risk, behind, achieved]

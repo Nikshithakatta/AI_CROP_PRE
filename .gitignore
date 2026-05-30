@@ -1,0 +1,38 @@
+# Python
+backend/.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Secrets — never commit
+backend/.env
+.env
+.env.local
+.env.*.local
+
+# Node / React
+frontend/node_modules/
+frontend/build/
+frontend/.env.local
+
+# Caches
+frontend/node_modules/.cache/
+*.tsbuildinfo
+.eslintcache
+
+# ML models — exceed GitHub 100MB limit; train locally (see README)
+*.pkl
+backend/models/models/
+
+# IDE / OS
+.vscode/
+.idea/
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,287 @@
+{
+  "info": {
+    "name": "EAF Portal - Seed Data",
+    "description": "Postman collection for seeding EAF Portal with initial data",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\":\"admin@eafportal.com\",\"password\":\"admin123\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login to get authentication token"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set('authToken', jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AI Strategy Canvas",
+      "item": [
+        {
+          "name": "Create AI North Star",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"visionStatement\":\"To become an AI-first organization that leverages cutting-edge AI technologies to drive innovation, efficiency, and competitive advantage across all business functions.\",\"strategicObjectives\":[\"Achieve 80% automation of repetitive tasks across all departments\",\"Implement AI-driven decision support for 90% of strategic business decisions\",\"Develop and deploy 15+ AI use cases with measurable ROI within 18 months\",\"Establish Center of Excellence for AI with 30+ certified AI practitioners\"],\"keyResults\":[{\"description\":\"Increase operational efficiency through AI automation\",\"targetValue\":80,\"currentValue\":35,\"unit\":\"%\",\"dueDate\":\"2026-12-31\"},{\"description\":\"AI-driven revenue growth\",\"targetValue\":25,\"currentValue\":8,\"unit\":\"% of total revenue\",\"dueDate\":\"2026-12-31\"}]}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ai-strategy/north-star",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai-strategy", "north-star"]
+            },
+            "description": "Create or update the AI North Star strategy"
+          }
+        },
+        {
+          "name": "Create Use Cases",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "[{\"title\":\"Digital Transformation Strategy\",\"description\":\"Comprehensive AI strategy for digital transformation in manufacturing\",\"businessValue\":5,\"technicalFeasibility\":4,\"status\":\"in_progress\"},{\"title\":\"Cloud Migration Plan\",\"description\":\"AI-powered cloud migration strategy for financial services\",\"businessValue\":4,\"technicalFeasibility\":3,\"status\":\"proposed\"},{\"title\":\"AI Integration Roadmap\",\"description\":\"End-to-end AI integration for healthcare provider\",\"businessValue\":5,\"technicalFeasibility\":5,\"status\":\"completed\"}]"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ai-strategy/use-cases/batch",
+              "host": ["{{baseUrl}}"],
+              "path": ["ai-strategy", "use-cases", "batch"]
+            },
+            "description": "Create multiple use cases in a batch"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Maturity Assessment",
+      "item": [
+        {
+          "name": "Create Assessment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"Q2 2025 AI Maturity Assessment\",\"description\":\"Quarterly assessment of AI maturity across the organization\",\"status\":\"completed\",\"assessmentDate\":\"2025-06-30\",\"scores\":[{\"dimension\":\"Strategy\",\"score\":3.5,\"industryBenchmark\":3.2},{\"dimension\":\"Data\",\"score\":2.8,\"industryBenchmark\":3.0},{\"dimension\":\"Technology\",\"score\":3.2,\"industryBenchmark\":3.1},{\"dimension\":\"Organization\",\"score\":2.5,\"industryBenchmark\":2.8},{\"dimension\":\"Governance\",\"score\":3.0,\"industryBenchmark\":2.9}],\"recommendations\":[\"Develop a formal AI strategy with clear KPIs and roadmap\",\"Invest in data quality and data governance initiatives\",\"Upskill workforce in AI and data literacy\",\"Establish AI governance framework and ethics guidelines\"]}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/maturity/assessments",
+              "host": ["{{baseUrl}}"],
+              "path": ["maturity", "assessments"]
+            },
+            "description": "Create a new maturity assessment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Organization & Operating Model",
+      "item": [
+        {
+          "name": "Set Organization Model",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"coeModel\":\"hub_and_spoke\",\"raciMatrix\":[{\"activity\":\"AI Strategy Definition\",\"responsible\":\"CDO Office\",\"accountable\":\"CDO\",\"consulted\":[\"Business Units\",\"Legal\"],\"informed\":[\"All Employees\"]},{\"activity\":\"Use Case Prioritization\",\"responsible\":\"AI CoE\",\"accountable\":\"Head of AI\",\"consulted\":[\"Business Units\",\"Finance\"],\"informed\":[\"IT\"]}],\"kpis\":[{\"name\":\"Time to Market\",\"description\":\"Average time from ideation to production deployment\",\"targetValue\":60,\"unit\":\"days\",\"frequency\":\"monthly\"},{\"name\":\"Model Retraining Frequency\",\"description\":\"How often models are retrained with new data\",\"targetValue\":7,\"unit\":\"days\",\"frequency\":\"monthly\"},{\"name\":\"Model Drift\",\"description\":\"Percentage of models experiencing performance degradation\",\"targetValue\":5,\"unit\":\"%\",\"frequency\":\"weekly\"},{\"name\":\"AI Talent Growth\",\"description\":\"Number of employees trained in AI/ML\",\"targetValue\":100,\"unit\":\"employees\",\"frequency\":\"quarterly\"}]}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/organization/model",
+              "host": ["{{baseUrl}}"],
+              "path": ["organization", "model"]
+            },
+            "description": "Set the organization's operating model"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Data & Platform Strategy",
+      "item": [
+        {
+          "name": "Set Data Platform Architecture",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"model\":\"data_lakehouse\",\"components\":[{\"name\":\"Data Ingestion\",\"type\":\"ingestion\",\"technology\":\"Apache Kafka, AWS Kinesis\",\"description\":\"Real-time and batch data ingestion layer\",\"status\":\"live\"},{\"name\":\"Data Storage\",\"type\":\"storage\",\"technology\":\"Delta Lake, Amazon S3\",\"description\":\"Unified storage layer for raw and processed data\",\"status\":\"live\"},{\"name\":\"Data Processing\",\"type\":\"processing\",\"technology\":\"Apache Spark, Databricks\",\"description\":\"Distributed data processing framework\",\"status\":\"live\"}],\"modelRegistry\":{\"url\":\"https://mlflow.eafportal.com\",\"type\":\"mlflow\"},\"vectorDB\":{\"type\":\"weaviate\",\"configuration\":{\"url\":\"https://weaviate.eafportal.com\",\"embeddingModel\":\"text-embedding-3-large\",\"replicationFactor\":3}},\"buildVsBuyAnalysis\":{\"decision\":\"hybrid\",\"rationale\":\"Leverage best-of-breed managed services while building custom components for differentiation\",\"costComparison\":{\"buildCost3Yr\":2500000,\"buyCost3Yr\":1800000,\"hybridCost3Yr\":2000000,\"buildTco\":3.2,\"buyTco\":2.8,\"hybridTco\":2.9}}}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/data-platform/architecture",
+              "host": ["{{baseUrl}}"],
+              "path": ["data-platform", "architecture"]
+            },
+            "description": "Set the data platform architecture"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AgentOps Governance",
+      "item": [
+        {
+          "name": "Create Governance Policy",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"name\":\"AI Model Risk Management Policy\",\"description\":\"Framework for identifying, assessing, and mitigating risks associated with AI/ML models\",\"category\":\"governance\",\"status\":\"active\",\"lastReviewed\":\"2025-03-15\",\"content\":\"This policy establishes the framework for managing risks associated with AI/ML models across their lifecycle, including development, validation, deployment, monitoring, and decommissioning. It covers risk assessment methodologies, risk appetite statements, and mitigation strategies specific to AI/ML risks.\",\"approvalWorkflow\":{\"steps\":[{\"name\":\"Initial Review\",\"approvers\":[\"head-of-risk\"],\"status\":\"approved\",\"comments\":\"Policy aligns with our risk management framework\",\"completedAt\":\"2025-03-10T10:30:00Z\"},{\"name\":\"Legal Review\",\"approvers\":[\"general-counsel\"],\"status\":\"approved\",\"comments\":\"No legal concerns identified\",\"completedAt\":\"2025-03-12T14:15:00Z\"},{\"name\":\"Final Approval\",\"approvers\":[\"cio\"],\"status\":\"approved\",\"comments\":\"Approved for implementation\",\"completedAt\":\"2025-03-15T09:45:00Z\"}],\"currentStep\":3,\"status\":\"approved\"}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/governance/policies",
+              "host": ["{{baseUrl}}"],
+              "path": ["governance", "policies"]
+            },
+            "description": "Create a new governance policy"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Monetization Strategy",
+      "item": [
+        {
+          "name": "Create Business Case",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"title\":\"AI-Powered Customer Service Automation\",\"description\":\"Implementation of AI-powered virtual agents to handle 70% of routine customer service inquiries, reducing operational costs and improving customer satisfaction.\",\"status\":\"approved\",\"financials\":{\"initialInvestment\":1250000,\"ongoingCosts\":350000,\"costSavings\":2800000,\"revenueImpact\":4500000,\"timeToValue\":8},\"roiAnalysis\":{\"paybackPeriod\":5.2,\"roiPercentage\":260,\"npv\":8200000,\"irr\":42.5,\"breakEvenPoint\":\"2026-03-01\"},\"valueRealization\":[{\"metric\":\"Customer Service Cost per Contact\",\"targetValue\":2.5,\"currentValue\":3.8,\"unit\":\"USD\",\"status\":\"on_track\"},{\"metric\":\"First Contact Resolution Rate\",\"targetValue\":75,\"currentValue\":82,\"unit\":\"%\",\"status\":\"achieved\",\"achievedAt\":\"2025-05-15T00:00:00Z\"},{\"metric\":\"Customer Satisfaction Score (CSAT)\",\"targetValue\":85,\"currentValue\":88,\"unit\":\"points\",\"status\":\"achieved\",\"achievedAt\":\"2025-06-01T00:00:00Z\"},{\"metric\":\"Agent Productivity\",\"targetValue\":40,\"currentValue\":35,\"unit\":\"contacts/agent/day\",\"status\":\"on_track\"}]}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/monetization/business-cases",
+              "host": ["{{baseUrl}}"],
+              "path": ["monetization", "business-cases"]
+            },
+            "description": "Create a new business case for AI monetization"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set environment variables if needed"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Add tests here"
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3001/api/v1",
+      "type": "string"
+    }
+  ]
+}
